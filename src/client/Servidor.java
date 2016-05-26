@@ -26,10 +26,8 @@ public class Servidor extends Thread {
             Naming.rebind("//localhost:" + porta.toString() + "/Leibniz", leibniz);
         } catch (RemoteException re) {
             System.out.println("Ocorreu um erro ao iniciar a classe de cálculo!");
-            System.exit(1);
         } catch (MalformedURLException e) {
             System.out.println("Verifique a URL de binding.");
         }
-
     }
 }
