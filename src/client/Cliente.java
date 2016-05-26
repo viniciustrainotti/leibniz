@@ -12,7 +12,7 @@ public class Cliente {
     public static void main(String[] args) {
         tempoInicio = System.currentTimeMillis();
         Integer iterations = 5000000;
-        Integer threads = 4;
+        Integer threads = 32;
 
         InterfaceLeibniz leibniz;
 
