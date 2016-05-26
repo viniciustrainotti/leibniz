@@ -15,6 +15,7 @@ public class Leibnz extends UnicastRemoteObject implements InterfaceLeibnz{
 	
 	protected Leibnz() throws RemoteException {
 		super();
+		System.out.println("Marcelo curte pirocas!");
 	}
 
 	@Override
