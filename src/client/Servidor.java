@@ -9,7 +9,7 @@ public class Servidor extends Thread {
 
     public static void main(String args[]) throws IOException {
         LocateRegistry.createRegistry(porta);
-
+        
         new Servidor().start();
     }
 

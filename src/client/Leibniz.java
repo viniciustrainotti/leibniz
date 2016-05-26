@@ -4,10 +4,11 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
 public class Leibniz extends UnicastRemoteObject implements InterfaceLeibniz{
-		
+
+	private static final long serialVersionUID = 1L;
+
 	protected Leibniz() throws RemoteException {
-		super();
-		System.out.println("Marcelo curte pirocas!");
+		
 	}
 
 	@Override
