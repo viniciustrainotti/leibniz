@@ -15,7 +15,7 @@ public class Servidor extends Thread{
 		
 		try{
 			
-			Leibnz l = new Leibnz();
+			Leibniz l = new Leibniz();
 			Naming.rebind("//localhost:2020/Leibnz", l);
 			
 		}catch(Exception e){
