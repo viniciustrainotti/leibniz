@@ -1,4 +1,6 @@
-package client;
+package server;
+
+import client.InterfaceLeibniz;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
