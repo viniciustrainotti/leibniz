@@ -6,7 +6,7 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 
 
-public class Cliente {
+public class Client {
 
     private static long tempoInicio;
     private static Integer porta = 2020;

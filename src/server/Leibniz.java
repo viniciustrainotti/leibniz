@@ -32,7 +32,7 @@ public class Leibniz extends UnicastRemoteObject implements InterfaceLeibniz {
             try {
                 sem.acquire();
             } catch (InterruptedException e) {
-                System.out.println("Ocorreu um erro ao pegar um semáforo");
+                System.out.println("Ocorreu um erro ao pegar um semaforo");
             }
 
             final Thread t = new Thread(new Runnable() {
@@ -49,8 +49,6 @@ public class Leibniz extends UnicastRemoteObject implements InterfaceLeibniz {
             });
             t.start();
         }
-         
-
         //noinspection StatementWithEmptyBody
         while (sem.availablePermits() != threads);
 

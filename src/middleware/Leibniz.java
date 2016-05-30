@@ -8,7 +8,7 @@ import java.rmi.server.UnicastRemoteObject;
 
 public class Leibniz  extends UnicastRemoteObject implements middleware.InterfaceLeibniz {
     private static long tempoInicio;
-    private static Integer porta = 2040;
+    private static Integer porta = 2020;
 
     protected Leibniz() throws RemoteException {
     }
