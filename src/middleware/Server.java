@@ -15,7 +15,7 @@ public class Server extends Thread {
     public static void main(String args[]) throws IOException {
         LocateRegistry.createRegistry(porta);
 
-        new server.Server().start();
+        new middleware.Server().start();
     }
 
     @Override
@@ -26,6 +26,7 @@ public class Server extends Thread {
 
         try {
             leibniz = new middleware.Leibniz();
+            System.out.println("Porta: " + porta.toString());
             Naming.rebind("//localhost:" + porta.toString() + "/Leibniz", leibniz);
         } catch (RemoteException re) {
             System.out.println("Ocorreu um erro ao iniciar a classe de cálculo!");
