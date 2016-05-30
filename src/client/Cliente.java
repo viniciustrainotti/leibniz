@@ -5,6 +5,7 @@ import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 
+
 public class Cliente {
 
     private static long tempoInicio;
@@ -13,7 +14,7 @@ public class Cliente {
     public static void main(String[] args) {
         tempoInicio = System.currentTimeMillis();
         Integer iterations = 5000000;
-        Integer threads = 4;
+        Integer threads = 32;
 
         InterfaceLeibniz leibniz;
 

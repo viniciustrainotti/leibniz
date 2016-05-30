@@ -1,4 +1,6 @@
-package client;
+package server;
+
+import client.InterfaceLeibniz;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -16,6 +18,8 @@ public class Leibniz extends UnicastRemoteObject implements InterfaceLeibniz {
         final double[] terms = new double[threads];
         double pi = 0;
 
+        final Semaphore sem = new Semaphore(threads);
+
         Integer begin = 0;
         Integer perThread = iterations / threads;
         Integer end = perThread;
@@ -24,6 +28,12 @@ public class Leibniz extends UnicastRemoteObject implements InterfaceLeibniz {
             final Integer finalBegin = begin;
             final Integer finalEnd = end;
             final int currentThread = iter;
+
+            try {
+                sem.acquire();
+            } catch (InterruptedException e) {
+                System.out.println("Ocorreu um erro ao pegar um semáforo");
+            }
 
             final Thread t = new Thread(new Runnable() {
                 Integer start = finalBegin;
@@ -34,16 +44,18 @@ public class Leibniz extends UnicastRemoteObject implements InterfaceLeibniz {
                     for (Integer i = start; i < stop; i++) {
                         terms[currentThread] += Math.pow(-1, i) / (2 * i + 1);
                     }
-                    System.out.println(terms[currentThread]);
+                    sem.release();
                 }
             });
             t.start();
         }
          
 
+        //noinspection StatementWithEmptyBody
+        while (sem.availablePermits() != threads);
+
         for (double x: terms) {
             pi += x;
-            System.out.println(x);
         }
 
         return pi * 4;
