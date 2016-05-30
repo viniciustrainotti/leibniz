@@ -12,13 +12,15 @@ public class Cliente {
 
     public static void main(String[] args) {
         tempoInicio = System.currentTimeMillis();
+        Integer iterations = 5000000;
+        Integer threads = 4;
 
         InterfaceLeibniz leibniz;
 
         try {
             leibniz = (InterfaceLeibniz) Naming.lookup("rmi://localhost:" + porta.toString() + "/Leibniz");
 
-            System.out.println(leibniz.calc(5000000));
+            System.out.println(leibniz.calc(iterations, threads));
         } catch (NotBoundException e) {
             System.out.println("Ocorreu um erro com a porta. Verifique seu firewall.");
         } catch (MalformedURLException e) {
