@@ -14,14 +14,15 @@ public class Client {
         Integer iterations = 5000000;
         Integer threads = 32;
 
-        InterfaceLeibniz leibniz;
+        client.InterfaceLeibniz leibniz;
 
         try {
-            leibniz = (InterfaceLeibniz) Naming.lookup("rmi://localhost:" + porta.toString() + "/Leibniz");
+            leibniz = (client.InterfaceLeibniz) Naming.lookup("rmi://localhost:" + porta.toString() + "/Leibniz");
 
             System.out.println(leibniz.calc(iterations, threads));
         } catch (NotBoundException e) {
             System.out.println("Ocorreu um erro com a porta. Verifique seu firewall.");
+            e.printStackTrace();
         } catch (MalformedURLException e) {
             System.out.println("Ocorreu um erro ao conectar ao servidor. Verifique a URL.");
         } catch (RemoteException e) {

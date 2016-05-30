@@ -6,7 +6,7 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
-public class Leibniz  extends UnicastRemoteObject implements middleware.InterfaceLeibniz {
+public class Leibniz  extends UnicastRemoteObject implements client.InterfaceLeibniz {
     private static long tempoInicio;
     private static Integer porta = 2040;
 
