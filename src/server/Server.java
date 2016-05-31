@@ -1,9 +1,11 @@
 package server;
 
 import java.io.IOException;
-import java.net.*;
+import java.net.DatagramPacket;
+import java.net.InetAddress;
+import java.net.MulticastSocket;
+import java.net.UnknownHostException;
 import java.rmi.AlreadyBoundException;
-import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -62,7 +64,6 @@ class Server extends Thread {
         Leibniz leibniz;
 
         try {
-            LocateRegistry.createRegistry(porta);
             leibniz = new Leibniz();
             registry.bind("Leibniz", leibniz);
         } catch (RemoteException re) {

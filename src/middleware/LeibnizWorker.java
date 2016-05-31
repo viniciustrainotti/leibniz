@@ -7,20 +7,18 @@ import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 
-/**
- * Created by davi_000 on 30/05/2016.
- */
 public class LeibnizWorker implements Runnable {
     private long tempoInicio;
     private Integer iterations;
     private Integer threads;
     private int serverId;
     private double[] result;
-    private InetAddress server;
+    private LeibnizServer server;
 
-    public LeibnizWorker(long tempoInicio, Integer iterations, int serverId, double[] result, LeibnizServer server) {
+    public LeibnizWorker(long tempoInicio, Integer iterations, Integer threads, int serverId, double[] result, LeibnizServer server) {
         this.tempoInicio = tempoInicio;
         this.iterations = iterations;
+        this.threads = threads;
         this.serverId = serverId;
         this.result = result;
         this.server = server;
@@ -31,8 +29,8 @@ public class LeibnizWorker implements Runnable {
         middleware.InterfaceLeibniz leibniz;
 
         try {
-            String URI = "rmi://" + InetAddress.getLocalHost().getHostAddress() + ":2220/LeibnizMiddleware";
-            leibniz = (InterfaceLeibniz) Naming.lookup(URI);
+            String URI = "rmi://" + InetAddress.getLocalHost().getHostAddress() + ":2230/Leibniz";
+            leibniz = (middleware.InterfaceLeibniz) Naming.lookup(URI);
 
             System.out.println("Tempo Total: " + (System.currentTimeMillis() - tempoInicio));
 

@@ -17,6 +17,7 @@ public class Leibniz extends UnicastRemoteObject implements client.InterfaceLeib
     public double calc(Integer iterations, Integer threads) throws RemoteException {
         long tempoInicio = System.currentTimeMillis();
         Integer serverId = 0;
+        double sum = 0;
         double[] result = new double[leibnizServers.size()];
 
         Integer iterationPerServer = iterations / leibnizServers.size();
@@ -24,11 +25,18 @@ public class Leibniz extends UnicastRemoteObject implements client.InterfaceLeib
         ExecutorService executor = Executors.newFixedThreadPool(leibnizServers.size());
 
         for (LeibnizServer server: leibnizServers) {
-            Runnable worker = new LeibnizWorker(tempoInicio, iterationPerServer, serverId++, result, server);
+            Runnable worker = new LeibnizWorker(tempoInicio, iterationPerServer, threads, serverId++, result, server);
             executor.execute(worker);
         }
 
-        return 0d;
+        executor.shutdown();
+        while (!executor.isTerminated());
+
+        for (double x: result) {
+            sum += x;
+        }
+
+        return sum;
     }
 
     public void addServer(InetAddress serverAddress)

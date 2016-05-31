@@ -86,6 +86,7 @@ class Server extends Thread {
                     msg = new String(data);
 
                     if (Objects.equals(msg, "SUP!!!")) {
+                        System.out.println("Servidor encontrado: " + packet.getAddress());
                         finalLeibniz.addServer(packet.getAddress());
                     }
                 }
