@@ -1,38 +1,38 @@
 package middleware;
 
-import java.net.MalformedURLException;
-import java.rmi.Naming;
-import java.rmi.NotBoundException;
+import java.net.InetAddress;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.ArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
-public class Leibniz  extends UnicastRemoteObject implements client.InterfaceLeibniz {
-    private static long tempoInicio;
-    private static Integer porta = 2020;
+public class Leibniz extends UnicastRemoteObject implements client.InterfaceLeibniz {
+    private static final ArrayList<LeibnizServer> leibnizServers = new ArrayList<>();
 
-    protected Leibniz() throws RemoteException {
+    Leibniz() throws RemoteException {
     }
 
     @Override
     public double calc(Integer iterations, Integer threads) throws RemoteException {
-        tempoInicio = System.currentTimeMillis();
+        long tempoInicio = System.currentTimeMillis();
+        Integer serverId = 0;
+        double[] result = new double[leibnizServers.size()];
 
-        middleware.InterfaceLeibniz leibniz;
+        Integer iterationPerServer = iterations / leibnizServers.size();
 
-        try {
-            leibniz = (middleware.InterfaceLeibniz) Naming.lookup("rmi://localhost:" + porta.toString() + "/Leibniz");
+        ExecutorService executor = Executors.newFixedThreadPool(leibnizServers.size());
 
-            System.out.println("Tempo Total: " + (System.currentTimeMillis() - tempoInicio));
-
-            return leibniz.calc(iterations, threads);
-        } catch (NotBoundException e) {
-            System.out.println("Ocorreu um erro com a porta. Verifique seu firewall.");
-        } catch (MalformedURLException e) {
-            System.out.println("Ocorreu um erro ao conectar ao servidor. Verifique a URL.");
-        } catch (RemoteException e) {
-            System.out.println("Ocorreu um erro no servidor.");
+        for (LeibnizServer server: leibnizServers) {
+            Runnable worker = new LeibnizWorker(tempoInicio, iterationPerServer, serverId++, result, server);
+            executor.execute(worker);
         }
 
         return 0d;
+    }
+
+    public void addServer(InetAddress serverAddress)
+    {
+        leibnizServers.add(new LeibnizServer(serverAddress));
     }
 }

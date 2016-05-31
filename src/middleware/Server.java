@@ -1,19 +1,22 @@
 package middleware;
 
-import client.*;
-import server.*;
-
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.rmi.Naming;
+import java.net.DatagramPacket;
+import java.net.InetAddress;
+import java.net.MulticastSocket;
+import java.net.UnknownHostException;
+import java.rmi.AlreadyBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+import java.util.Objects;
 
-public class Server extends Thread {
-    private static Integer porta = 2040;
+class Server extends Thread {
+    private static Registry registry;
 
     public static void main(String args[]) throws IOException {
-        LocateRegistry.createRegistry(porta);
+        System.setProperty("java.rmi.server.hostname", InetAddress.getLocalHost().getHostAddress());
+        registry = LocateRegistry.createRegistry(2220);
 
         new middleware.Server().start();
     }
@@ -22,16 +25,71 @@ public class Server extends Thread {
     public void run() {
         super.run();
 
-        middleware.Leibniz leibniz;
+        middleware.Leibniz leibniz = null;
 
         try {
-            leibniz = new middleware.Leibniz();
-            System.out.println("Porta: " + porta.toString());
-            Naming.rebind("//localhost:" + porta.toString() + "/Leibniz", leibniz);
-        } catch (RemoteException re) {
-            System.out.println("Ocorreu um erro ao iniciar a classe de c�lculo!");
-        } catch (MalformedURLException e) {
-            System.out.println("Verifique a URL de binding.");
+            leibniz = new Leibniz();
+        } catch (RemoteException e) {
+            System.out.println("Ocorreu um erro ao iniciar a classe de cálculo!");
+            e.printStackTrace();
         }
+        try {
+            registry.bind("LeibnizMiddleware", leibniz);
+        } catch (RemoteException re) {
+            System.out.println("Ocorreu um erro ao registrar o serviço.");
+            re.printStackTrace();
+            System.exit(1);
+        } catch (AlreadyBoundException e) {
+            System.out.println("Ocorreu um erro ao iniciar o serviço.");
+            System.exit(1);
+        }
+
+        InetAddress group = null;
+        try {
+            group = InetAddress.getByName("224.2.2.224");
+        } catch (UnknownHostException e) {
+            System.out.println("Ocorreu um erro ao iniciar o multicast");
+            System.exit(1);
+        }
+
+        MulticastSocket multicastSocket = null;
+        Integer multicastPort = 2240;
+        try {
+            multicastSocket = new MulticastSocket(multicastPort);
+            multicastSocket.joinGroup(group);
+        } catch (IOException e) {
+            System.out.println("Ocorreu um erro ao escutar na porta " + multicastPort.toString());
+            System.exit(1);
+        }
+
+        final MulticastSocket finalMulticastSocket = multicastSocket;
+        final Leibniz finalLeibniz = leibniz;
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                //noinspection InfiniteLoopStatement
+                while (true) {
+                    byte[] buf = new byte[1000];
+                    DatagramPacket packet = new DatagramPacket(buf, buf.length);
+                    String msg = "";
+
+                    try {
+                        finalMulticastSocket.receive(packet);
+                    } catch (IOException e) {
+                        System.out.println("Ocorreu um erro ao ler o multicast");
+                    }
+
+                    byte[] data = new byte[packet.getLength()];
+                    System.arraycopy(packet.getData(), packet.getOffset(), data, 0, packet.getLength());
+
+                    msg = new String(data);
+
+                    if (Objects.equals(msg, "SUP!!!")) {
+                        finalLeibniz.addServer(packet.getAddress());
+                    }
+                }
+            }
+        }).start();
     }
 }

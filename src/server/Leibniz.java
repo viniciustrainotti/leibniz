@@ -6,13 +6,11 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.concurrent.Semaphore;
 
-public class Leibniz extends UnicastRemoteObject implements InterfaceLeibniz {
-    
-	private static final long serialVersionUID = 1L;
-	
-	protected Leibniz() throws RemoteException {
-        
+class Leibniz extends UnicastRemoteObject implements InterfaceLeibniz {
+    Leibniz() throws RemoteException {
+        super();
     }
+
     @Override
     public double calc(Integer iterations, Integer threads) throws RemoteException {
         final double[] terms = new double[threads];
@@ -36,8 +34,8 @@ public class Leibniz extends UnicastRemoteObject implements InterfaceLeibniz {
             }
 
             final Thread t = new Thread(new Runnable() {
-                Integer start = finalBegin;
-                Integer stop = finalEnd;
+                final Integer start = finalBegin;
+                final Integer stop = finalEnd;
 
                 public void run() {
                     terms[currentThread] = 0;

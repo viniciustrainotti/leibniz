@@ -1,25 +1,23 @@
 package client;
 
+import java.net.InetAddress;
 import java.net.MalformedURLException;
+import java.net.UnknownHostException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 
-
-public class Client {
-
-    private static long tempoInicio;
-    private static Integer porta = 2020;
-
+class Client {
     public static void main(String[] args) {
-        tempoInicio = System.currentTimeMillis();
+        long tempoInicio = System.currentTimeMillis();
         Integer iterations = 5000000;
         Integer threads = 32;
 
         client.InterfaceLeibniz leibniz;
 
         try {
-            leibniz = (client.InterfaceLeibniz) Naming.lookup("rmi://localhost:" + porta.toString() + "/Leibniz");
+            String URI = "rmi://" + InetAddress.getLocalHost().getHostAddress() + ":2220/LeibnizMiddleware";
+            leibniz = (client.InterfaceLeibniz) Naming.lookup(URI);
 
             System.out.println(leibniz.calc(iterations, threads));
         } catch (NotBoundException e) {
@@ -29,6 +27,9 @@ public class Client {
             System.out.println("Ocorreu um erro ao conectar ao servidor. Verifique a URL.");
         } catch (RemoteException e) {
             System.out.println("Ocorreu um erro no servidor.");
+            e.printStackTrace();
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
         }
 
         System.out.println("Tempo Total: " + (System.currentTimeMillis() - tempoInicio));
