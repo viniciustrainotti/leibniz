@@ -12,17 +12,20 @@ import java.rmi.registry.Registry;
 
 class Server extends Thread {
     private static Registry registry;
-    private final Integer porta = 2230;
+    private static final Integer porta = 2230;
 
-    public static void main(String args[]) throws IOException {
+    public static void main(String args[]) throws IOException, InterruptedException {
         System.setProperty("java.rmi.server.hostname", InetAddress.getLocalHost().getHostAddress());
 
-        registry = LocateRegistry.createRegistry(2230);
+        registry = LocateRegistry.createRegistry(porta);
 
-        new Server().start();
+        Server s = new Server();
+        s.start();
+
+        // s.multicast("KTHXBAI");
     }
 
-    public Server() {
+    private Server() {
     }
 
     @Override
@@ -33,6 +36,10 @@ class Server extends Thread {
 
         initServer();
 
+        multicast(msg);
+    }
+
+    private void multicast(String msg) {
         InetAddress group = null;
         try {
             group = InetAddress.getByName("224.2.2.224");

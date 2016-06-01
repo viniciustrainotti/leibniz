@@ -7,13 +7,13 @@ import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 
-public class LeibnizWorker implements Runnable {
-    private long tempoInicio;
-    private Integer iterations;
-    private Integer threads;
-    private int serverId;
-    private double[] result;
-    private LeibnizServer server;
+class LeibnizWorker implements Runnable {
+    private final long tempoInicio;
+    private final Integer iterations;
+    private final Integer threads;
+    private final int serverId;
+    private final double[] result;
+    private final LeibnizServer server;
 
     public LeibnizWorker(long tempoInicio, Integer iterations, Integer threads, int serverId, double[] result, LeibnizServer server) {
         this.tempoInicio = tempoInicio;

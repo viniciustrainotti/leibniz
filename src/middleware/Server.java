@@ -68,11 +68,11 @@ class Server extends Thread {
         new Thread(new Runnable() {
             @Override
             public void run() {
+                String msg;
                 //noinspection InfiniteLoopStatement
                 while (true) {
                     byte[] buf = new byte[1000];
                     DatagramPacket packet = new DatagramPacket(buf, buf.length);
-                    String msg = "";
 
                     try {
                         finalMulticastSocket.receive(packet);
@@ -85,9 +85,14 @@ class Server extends Thread {
 
                     msg = new String(data);
 
+                    assert finalLeibniz != null;
+
                     if (Objects.equals(msg, "SUP!!!")) {
                         System.out.println("Servidor encontrado: " + packet.getAddress());
                         finalLeibniz.addServer(packet.getAddress());
+                    } else if (Objects.equals(msg, "KTHXBAI")) {
+                        System.out.println("Servidor encerrado: " + packet.getAddress());
+                        finalLeibniz.removeServer(packet.getAddress());
                     }
                 }
             }

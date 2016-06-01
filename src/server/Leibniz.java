@@ -30,7 +30,7 @@ class Leibniz extends UnicastRemoteObject implements InterfaceLeibniz {
             try {
                 sem.acquire();
             } catch (InterruptedException e) {
-                System.out.println("Ocorreu um erro ao pegar um semaforo");
+                System.out.println("Ocorreu um erro ao pegar um semáforo");
             }
 
             final Thread t = new Thread(new Runnable() {
