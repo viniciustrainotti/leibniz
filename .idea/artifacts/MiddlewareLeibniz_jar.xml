@@ -1,0 +1,11 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="MiddlewareLeibniz:jar">
+    <output-path>$PROJECT_DIR$/classes/artifacts/MiddlewareLeibniz_jar</output-path>
+    <root id="archive" name="MiddlewareLeibniz.jar">
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/src/middleware/META-INF/MANIFEST.MF" />
+      </element>
+      <element id="module-output" name="CalcuLeibnz" />
+    </root>
+  </artifact>
+</component>
